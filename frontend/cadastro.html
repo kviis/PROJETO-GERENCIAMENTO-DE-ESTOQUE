@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="front.js" defer></script>
+    <title>Cadastro</title>
+  </head>
+<body>
+  <div class="sidebar">
+    <h2>Painel de Monitoramento</h2>
+    <ul>
+      <li onclick="telaInicio()">Início</li>
+      <li onclick="telaEntradaEsaidas()">Entradas e Saidas</li>
+      <li onclick="telaEstoque()">Estoque</li>
+      <li onclick="telaCadastro()">Cadastrar</li>
+    </ul>
+  </div>
+  <div class="caixa-logalt">
+    <input type="button" id="sair" value="sair" onclick="sairConta()">
+  </div>
+  <div class="box-cadastro">
+    <h1>Cadastro de Produto</h1>
+    <div class="Ultilitarios">
+      <input type="text" id="cad-nome" placeholder="Nome do produto">
+    </div>
+    <div class="Ultilitarios">
+      <input type="number" id="cad-quantidade" placeholder="Quantidade">
+    </div>
+    <div class="Ultilitarios">
+      <input type="date" id="cad-validade">
+    </div>
+    <div class="cadastrar-buttom">
+      <button id="cadastrar-buttom">Cadastrar</button>
+    </div>
+    <p id="resultado-cadastro"></p>
+  </div>
+</body>
+</html>

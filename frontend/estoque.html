@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script src="front.js" defer></script>
+  <title>Estoque</title>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Painel de Monitoramento</h2>
+    <ul>
+      <li onclick="telaInicio()">Início</li>
+      <li onclick="telaEntradaEsaidas()">Entradas e Saídas</li>
+      <li onclick="telaEstoque()">Estoque</li>
+      <li onclick="telaCadastro()">Cadastrar</li>
+    </ul>
+  </div>
+  <div class="caixa-logalt">
+    <input type="button" id="sair" value="sair" onclick="sairConta()">
+  </div>
+  <div class="main">
+    <div class="box-estoque">
+      <h1>Estoque</h1>
+      <h2>Itens em Estoque</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Quantidade</th>
+            <th>Validade</th>
+          </tr>
+        </thead>
+        <tbody id="corpoEstoque"type="button"id="baixaestoque" value="baixa" onclick="baixa()">
+         
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

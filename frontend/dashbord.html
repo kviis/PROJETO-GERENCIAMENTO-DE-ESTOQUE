@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script src="front.js" defer></script>
+
+    <title>dashbord</title>
+
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Painel de Mnitoramento</h2>
+     <ul>
+       <li type="button" id="inicio" onclick="telaInicio()">Início</li>
+       <li type="button" id="entradas" onclick="telaEntradaEsaidas()">Entradas e Saidas</li>
+       <li type="button" id="estoque" onclick="telaEstoque()">Estoque</li>
+       <li type="button" id="cadastrar" onclick="telaCadastro()">Cadastrar</li>
+     </ul>
+  </div>
+  <div class="caixa-logalt">
+        <input type="image" name="conta" id="conta" src="" alt="fotoPerfil">      
+        <input type="button" id="sair" value="sair" onclick="sairConta()">
+  </div>
+  <div class="main">
+     <div class="box-dashboard">
+     
+    
+      <h1>painel de controle</h1>
+    
+     </div>
+     <div class="cards">
+       <div class="card">
+            <h3>produtos</h3>
+            <p id="totalProdutos">0</p>       
+          </div>
+       <div class="card">
+            <h3>em estoque</h3>
+            <p id="totalestoque">0</p>
+       </div>
+       <div class="card">
+        <h3>entradas</h3>
+        <p id="totalEntradas">0</p>  
+        </div>
+       <div class="card">
+            <h3>saidas</h3>
+            <p id="totalsaidas">0</p>
+       </div>
+     </div>
+   </div> 
+</body>
+</html>
