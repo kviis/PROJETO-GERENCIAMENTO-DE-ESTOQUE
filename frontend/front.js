@@ -1,4 +1,6 @@
-const API = "";
+const API = window.location.hostname === "localhost"
+    ? "http://localhost:3000"
+    : "";
 let produtoSaida = null;
 
 // ==========================================
