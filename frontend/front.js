@@ -1,220 +1,488 @@
 const API = "http://localhost:3000";
+let produtoSaida = null;
 
-document.addEventListener("DOMContentLoaded", function () {
+// ==========================================
+// INICIALIZAÇÃO
+// ==========================================
+document.addEventListener("DOMContentLoaded", () => {
     const botaoLogin = document.getElementById("loginbtn");
-    if (botaoLogin) botaoLogin.addEventListener("click", login);
-
     const botaoCriar = document.getElementById("create-user");
-    if (botaoCriar) botaoCriar.addEventListener("click", criarLogin);
-
     const botaoCadastrar = document.getElementById("cadastrar-buttom");
+
+    if (botaoLogin) botaoLogin.addEventListener("click", login);
+    if (botaoCriar) botaoCriar.addEventListener("click", criarLogin);
     if (botaoCadastrar) botaoCadastrar.addEventListener("click", cadastrarProduto);
 
     if (document.getElementById("totalProdutos")) carregarDashboard();
-    if (document.getElementById("corpoEstoque"))  carregarEstoque();
+    if (document.getElementById("corpoEstoque")) carregarEstoque();
     if (document.getElementById("corpoEntradas")) carregarEntradasSaidas();
+    
+    if (document.getElementById("listaCompradores")) { carregarGraficoCompradores();}
+
 });
 
-function login() {
+// ==========================================
+// API
+// ==========================================
+async function apiRequest(caminho, opcoes = {}) {
+    const resposta = await fetch(API + caminho, opcoes);
+    let dados = {};
+
+    try {
+        dados = await resposta.json();
+    } catch {
+        dados = { erro: `Resposta inválida do servidor (status ${resposta.status})` };
+    }
+
+    return { ok: resposta.ok, status: resposta.status, data: dados };
+}
+
+// ==========================================
+// LOGIN
+// ==========================================
+async function login() {
     const email = document.getElementById("username").value.trim();
     const senha = document.getElementById("password").value.trim();
+    const resultado = document.getElementById("resultado");
+
     if (!email || !senha) {
-        document.getElementById("resultado").innerHTML = "Preencha todos os campos!";
+        resultado.innerHTML = "Preencha todos os campos!";
         return;
     }
-    // rota real: POST /logar
-    fetch(API + "/logar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, senha })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.token) {
+
+    try {
+        const { ok, data } = await apiRequest("/logar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, senha })
+        });
+
+        if (ok && data.token) {
             localStorage.setItem("token", data.token);
             window.location.href = "dashbord.html";
         } else {
-            document.getElementById("resultado").innerHTML = data.erro || "Erro ao fazer login";
+            resultado.innerHTML = data.erro || "Erro ao fazer login";
         }
-    })
-    .catch(err => console.error("Erro no login:", err));
+    } catch (err) {
+        resultado.innerHTML = "Não foi possível conectar ao servidor.";
+        console.error("Erro no login:", err);
+    }
 }
 
-function criarLogin() {
-    const email     = document.getElementById("novo-email").value.trim();
-    const senha     = document.getElementById("nova-senha").value.trim();
+// ==========================================
+// CRIAR USUÁRIO
+// ==========================================
+async function criarLogin() {
+    const email = document.getElementById("novo-email").value.trim();
+    const senha = document.getElementById("nova-senha").value.trim();
     const confirmar = document.getElementById("confirmar-senha").value.trim();
     const resultado = document.getElementById("resultado-criar");
-    if (!email || !senha || !confirmar) { resultado.innerHTML = "Preencha todos os campos!"; return; }
-    if (senha !== confirmar) { resultado.innerHTML = "As senhas não coincidem!"; return; }
-    // rota real: POST /criarlogin
-    fetch(API + "/criarlogin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, senha })
-    })
-    .then(res => res.json())
-    .then(() => {
-        resultado.style.color = "green";
-        resultado.innerHTML = "Usuário criado com sucesso!";
-        setTimeout(() => window.location.href = "index.html", 1500);
-    })
-    .catch(err => { resultado.style.color = "red"; resultado.innerHTML = "Erro ao criar usuário."; console.error(err); });
-}
 
-function carregarDashboard() {
-    // rota real: GET /listar
-    fetch(API + "/listar")
-        .then(res => res.json())
-        .then(data => {
-            if (!Array.isArray(data)) return;
-            document.getElementById("totalProdutos").innerHTML = data.length;
-            const totalQtd = data.reduce((soma, item) => soma + (item.quantidade || 0), 0);
-            document.getElementById("totalestoque").innerHTML = totalQtd;
-        })
-        .catch(err => console.error("Erro dashboard estoque:", err));
-
-    // ATENÇÃO: não existe rota GET /movimentacoes no backend ainda.
-    // Precisa criar essa rota + função no controller antes disso funcionar.
-    fetch(API + "/movimentacoes")
-        .then(res => res.json())
-        .then(data => {
-            if (!Array.isArray(data)) return;
-            const totalEntradas = data.filter(m => m.tipo === "entrada").length;
-            const totalSaidas   = data.filter(m => m.tipo === "saida").length;
-            document.getElementById("totalEntradas").innerHTML = totalEntradas;
-            document.getElementById("totalsaidas").innerHTML   = totalSaidas;
-        })
-        .catch(err => console.error("Erro dashboard movimentações (rota ainda não existe no backend):", err));
-}
-
-function carregarEstoque() {
-    // rota real: GET /listar
-    fetch(API + "/listar")
-        .then(res => res.json())
-        .then(data => {
-            const corpo = document.getElementById("corpoEstoque");
-            corpo.innerHTML = "";
-            if (data.length === 0) {
-                corpo.innerHTML = "<tr><td colspan='4'>Nenhum item no estoque.</td></tr>";
-                return;
-            }
-            data.forEach(item => {
-                const linha = document.createElement("tr");
-                linha.innerHTML = `
-                    <td>${item.id}</td>
-                    <td>${item.nome}</td>
-                    <td>${item.quantidade}</td>
-                    <td>${item.validade ? item.validade.split("T")[0] : "-"}</td>
-                `;
-                corpo.appendChild(linha);
-            });
-        })
-        .catch(err => console.error("Erro ao carregar estoque:", err));
-}
-
-function carregarEntradasSaidas() {
-    // ATENÇÃO: não existe rota GET /movimentacoes no backend ainda.
-    fetch(API + "/movimentacoes")
-        .then(res => res.json())
-        .then(data => {
-            const corpoEntradas = document.getElementById("corpoEntradas");
-            const corpoSaidas   = document.getElementById("corpoSaidas");
-            corpoEntradas.innerHTML = "";
-            corpoSaidas.innerHTML  = "";
-            const entradas = data.filter(m => m.tipo === "entrada");
-            const saidas   = data.filter(m => m.tipo === "saida");
-            if (entradas.length === 0)
-                corpoEntradas.innerHTML = "<tr><td colspan='4'>Nenhuma entrada registrada.</td></tr>";
-            else
-                entradas.forEach(m => {
-                    corpoEntradas.innerHTML += `<tr>
-                        <td>${m.id}</td><td>${m.produto}</td>
-                        <td>${m.quantidade}</td>
-                        <td>${m.data ? m.data.split("T")[0] : "-"}</td>
-                    </tr>`;
-                });
-            if (saidas.length === 0)
-                corpoSaidas.innerHTML = "<tr><td colspan='4'>Nenhuma saída registrada.</td></tr>";
-            else
-                saidas.forEach(m => {
-                    corpoSaidas.innerHTML += `<tr>
-                        <td>${m.id}</td><td>${m.produto}</td>
-                        <td>${m.quantidade}</td>
-                        <td>${m.data ? m.data.split("T")[0] : "-"}</td>
-                    </tr>`;
-                });
-        })
-        .catch(err => console.error("Erro ao carregar movimentações (rota ainda não existe no backend):", err));
-}
-
-function registrarMovimentacao() {
-    const produto    = document.getElementById("mov-produto").value.trim();
-    const quantidade = document.getElementById("mov-quantidade").value.trim();
-    const tipo       = document.getElementById("mov-tipo").value;
-    const msg        = document.getElementById("msg-movimentacao");
-
-    if (!produto || !quantidade || !tipo) {
-        msg.style.color = "red";
-        msg.innerHTML = "Preencha todos os campos!";
+    if (!email || !senha || !confirmar) {
+        resultado.innerHTML = "Preencha todos os campos!";
         return;
     }
 
-    // ATENÇÃO: rota real é POST /movimentar/:id (precisa de um id de item existente).
-    // Não existe uma rota "criar movimentação nova sem id" no backend ainda.
-    fetch(API + "/movimentar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ produto, quantidade, tipo })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.erro) {
-            msg.style.color = "red";
-            msg.innerHTML = data.erro;
-        } else {
-            msg.style.color = "green";
-            msg.innerHTML = data.mensagem;
-            carregarEstoque();
-            carregarEntradasSaidas();
+    if (senha !== confirmar) {
+        resultado.innerHTML = "As senhas não coincidem!";
+        return;
+    }
+
+    try {
+        const { ok, data } = await apiRequest("/criarlogin", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, senha })
+        });
+
+        if (!ok) {
+            resultado.style.color = "red";
+            resultado.innerHTML = data.message || data.erro || "Erro ao criar usuário.";
+            return;
         }
-    })
-    .catch(err => {
-        msg.style.color = "red";
-        msg.innerHTML = "Erro ao registrar movimentação.";
+
+        resultado.style.color = "green";
+        resultado.innerHTML = "Usuário criado com sucesso!";
+        setTimeout(() => window.location.href = "index.html", 1500);
+    } catch (err) {
+        resultado.style.color = "red";
+        resultado.innerHTML = "Erro ao criar usuário.";
         console.error(err);
-    });
+    }
 }
 
-function cadastrarProduto() {
-    const nome       = document.getElementById("cad-nome").value.trim();
-    const quantidade = document.getElementById("cad-quantidade").value.trim();
-    const validade   = document.getElementById("cad-validade").value;
-    const resultado  = document.getElementById("resultado-cadastro");
-    if (!nome || !quantidade) { resultado.innerHTML = "Preencha pelo menos nome e quantidade!"; return; }
-    // rota real: POST /cadastrar
-    // ATENÇÃO: o controller de cadastrarItem hoje exige {produto, quantidade, validade}
-    // e insere na tabela "movimentacoes", não em "estoque". Ver observação abaixo.
-    fetch(API + "/cadastrar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ produto: nome, quantidade: parseInt(quantidade), validade: validade || null })
-    })
-    .then(res => res.json())
-    .then(() => {
+// ==========================================
+// DASHBOARD
+// ==========================================
+async function carregarDashboard() {
+    try {
+        const { ok, data } = await apiRequest("/listar");
+
+        if (ok && Array.isArray(data)) {
+            document.getElementById("totalProdutos").textContent = data.length;
+
+            const totalQtd = data.reduce(
+                (soma, item) => soma + Number(item.quantidade || 0), 0
+            );
+
+            document.getElementById("totalestoque").textContent = totalQtd;
+        }
+    } catch (err) {
+        console.error("Erro dashboard estoque:", err);
+    }
+
+    try {
+        const { ok, data } = await apiRequest("/movimentacoes");
+
+        if (ok && Array.isArray(data)) {
+            const entradas = data.filter(m => m.tipo === "entrada").length;
+            const saidas = data.filter(m => m.tipo === "saida").length;
+
+            document.getElementById("totalEntradas").textContent = entradas;
+            document.getElementById("totalsaidas").textContent = saidas;
+        }
+    } catch (err) {
+        console.error("Erro dashboard movimentações:", err);
+    }
+}
+
+// ==========================================
+// ESTOQUE
+// ==========================================
+async function carregarEstoque() {
+    const corpo = document.getElementById("corpoEstoque");
+    if (!corpo) return;
+
+    try {
+        const { ok, data } = await apiRequest("/listar");
+
+        if (!ok || !Array.isArray(data)) {
+            corpo.innerHTML = "<tr><td colspan='5'>Erro ao carregar estoque.</td></tr>";
+            return;
+        }
+
+        if (data.length === 0) {
+            corpo.innerHTML = "<tr><td colspan='5'>Nenhum item no estoque.</td></tr>";
+            return;
+        }
+
+        corpo.innerHTML = data.map(item => `
+            <tr>
+                <td>${item.id}</td>
+                <td>${item.nome}</td>
+                <td>${item.quantidade}</td>
+                <td>${item.validade ? item.validade.split("T")[0] : "-"}</td>
+                <td class="acao-baixa">
+                    <button
+                        type="button"
+                        class="botao-baixa"
+                        data-id="${item.id}"
+                        data-nome="${item.nome}"
+                        data-quantidade="${item.quantidade}">
+                        Dar baixa
+                    </button>
+                </td>
+            </tr>
+        `).join("");
+
+        corpo.querySelectorAll(".botao-baixa").forEach(botao => {
+            botao.addEventListener("click", () => {
+                abrirModalSaida(
+                    Number(botao.dataset.id),
+                    botao.dataset.nome,
+                    Number(botao.dataset.quantidade)
+                );
+            });
+        });
+    } catch (err) {
+        console.error("Erro ao carregar estoque:", err);
+        corpo.innerHTML = "<tr><td colspan='5'>Erro ao carregar estoque.</td></tr>";
+    }
+}
+
+// ==========================================
+// MODAL DE SAÍDA
+// ==========================================
+function abrirModalSaida(id, nome, quantidadeEstoque) {
+    if (quantidadeEstoque <= 0) {
+        alert("Este produto está sem estoque.");
+        return;
+    }
+
+    produtoSaida = { id, nome, quantidadeEstoque };
+
+    document.getElementById("modalProduto").textContent = nome;
+    document.getElementById("modalEstoque").textContent = quantidadeEstoque;
+    document.getElementById("quantidadeSaida").value = 1;
+    document.getElementById("compradorSaida").value = "";
+    document.getElementById("resumoProduto").textContent = nome;
+    document.getElementById("resumoQuantidade").textContent = 1;
+    document.getElementById("modalSaida").classList.add("ativo");
+
+    document.getElementById("compradorSaida").focus();
+}
+
+function aumentarSaida() {
+    if (!produtoSaida) return;
+
+    const input = document.getElementById("quantidadeSaida");
+    let quantidade = Number(input.value);
+
+    if (quantidade < produtoSaida.quantidadeEstoque) {
+        input.value = ++quantidade;
+        atualizarResumoSaida();
+    }
+}
+
+function diminuirSaida() {
+    const input = document.getElementById("quantidadeSaida");
+    let quantidade = Number(input.value);
+
+    if (quantidade > 1) {
+        input.value = --quantidade;
+        atualizarResumoSaida();
+    }
+}
+
+function atualizarResumoSaida() {
+    const quantidade = document.getElementById("quantidadeSaida").value;
+    document.getElementById("resumoQuantidade").textContent = quantidade;
+}
+
+function fecharModalSaida() {
+    document.getElementById("modalSaida").classList.remove("ativo");
+    produtoSaida = null;
+}
+
+// ==========================================
+// CONFIRMAR SAÍDA
+// ==========================================
+async function confirmarSaida() {
+    if (!produtoSaida) return;
+
+    const comprador = document.getElementById("compradorSaida").value.trim();
+    const quantidade = Number(document.getElementById("quantidadeSaida").value);
+
+    if (!comprador) {
+        alert("Informe o nome do comprador.");
+        document.getElementById("compradorSaida").focus();
+        return;
+    }
+
+    if (!Number.isInteger(quantidade) || quantidade <= 0) {
+        alert("Quantidade inválida.");
+        return;
+    }
+
+    if (quantidade > produtoSaida.quantidadeEstoque) {
+        alert("Quantidade maior que o estoque disponível.");
+        return;
+    }
+
+    try {
+        const { ok, data } = await apiRequest("/movimentacoes", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                produto: produtoSaida.nome,
+                quantidade,
+                tipo: "saida",
+                comprador
+            })
+        });
+
+        if (!ok) {
+            alert(data.erro || "Erro ao registrar saída.");
+            return;
+        }
+
+        alert("Saída registrada com sucesso!");
+        fecharModalSaida();
+        await carregarEstoque();
+    } catch (err) {
+        console.error("Erro ao registrar saída:", err);
+        alert("Não foi possível registrar a saída.");
+    }
+}
+
+// ==========================================
+// ENTRADAS E SAÍDAS
+// ==========================================
+function linhaEntrada(m) {
+    return `
+        <tr>
+            <td>${m.id}</td>
+            <td>${m.produto}</td>
+            <td>${m.quantidade}</td>
+            <td>${m.data ? m.data.split("T")[0] : "-"}</td>
+        </tr>
+    `;
+}
+
+function linhaSaida(m) {
+    return `
+        <tr>
+            <td>${m.id}</td>
+            <td>${m.produto}</td>
+            <td>${m.quantidade}</td>
+            <td>${m.comprador || "-"}</td>
+            <td>${m.data ? m.data.split("T")[0] : "-"}</td>
+        </tr>
+    `;
+}
+
+async function carregarEntradasSaidas() {
+    const corpoEntradas = document.getElementById("corpoEntradas");
+    const corpoSaidas = document.getElementById("corpoSaidas");
+    if (!corpoEntradas || !corpoSaidas) return;
+
+    const LIMITE = 10;
+
+    try {
+        const { ok, data } = await apiRequest("/movimentacoes");
+
+        if (!ok || !Array.isArray(data)) {
+            corpoEntradas.innerHTML = "<tr><td colspan='4'>Erro ao carregar entradas.</td></tr>";
+            corpoSaidas.innerHTML = "<tr><td colspan='5'>Erro ao carregar saídas.</td></tr>";
+            return;
+        }
+
+        const entradas = data.filter(m => m.tipo === "entrada").slice(0, LIMITE);
+        const saidas = data.filter(m => m.tipo === "saida").slice(0, LIMITE);
+
+        corpoEntradas.innerHTML = entradas.length
+            ? entradas.map(linhaEntrada).join("")
+            : "<tr><td colspan='4'>Nenhuma entrada registrada.</td></tr>";
+
+        corpoSaidas.innerHTML = saidas.length
+            ? saidas.map(linhaSaida).join("")
+            : "<tr><td colspan='5'>Nenhuma saída registrada.</td></tr>";
+    } catch (err) {
+        console.error("Erro ao carregar movimentações:", err);
+    }
+}
+
+// ==========================================
+// CADASTRAR PRODUTO
+// ==========================================
+async function cadastrarProduto() {
+    const nome = document.getElementById("cad-nome").value.trim();
+    const quantidade = Number(document.getElementById("cad-quantidade").value);
+    const validade = document.getElementById("cad-validade").value;
+    const resultado = document.getElementById("resultado-cadastro");
+
+    if (!nome || !Number.isInteger(quantidade) || quantidade <= 0) {
+        resultado.style.color = "red";
+        resultado.innerHTML = "Preencha nome e uma quantidade válida!";
+        return;
+    }
+
+    try {
+        const { ok, data } = await apiRequest("/cadastrar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                nome,
+                quantidade,
+                validade: validade || null
+            })
+        });
+
+        if (!ok) {
+            resultado.style.color = "red";
+            resultado.innerHTML = data.erro || "Erro ao cadastrar produto.";
+            return;
+        }
+
         resultado.style.color = "green";
-        resultado.innerHTML = "Produto cadastrado com sucesso!";
+        resultado.innerHTML = data.message || "Produto cadastrado com sucesso!";
+
         document.getElementById("cad-nome").value = "";
         document.getElementById("cad-quantidade").value = "";
         document.getElementById("cad-validade").value = "";
-    })
-    .catch(err => { resultado.style.color = "red"; resultado.innerHTML = "Erro ao cadastrar produto."; console.error(err); });
+    } catch (err) {
+        resultado.style.color = "red";
+        resultado.innerHTML = "Erro ao cadastrar produto.";
+        console.error(err);
+    }
+}
+// ==========================================
+//grafico compradores
+//===========================================
+
+async function carregarGraficoCompradores() {
+
+    const lista = document.getElementById("listaCompradores");
+    const filtro = document.getElementById("filtroCompradores");
+
+    console.log("LISTA:", lista);
+    console.log("FILTRO:", filtro);
+
+    if (!lista || !filtro) {
+        console.error("Elemento listaCompradores ou filtroCompradores não encontrado");
+        return;
+    }
+
+    try {
+
+        const { ok, data } = await apiRequest("/compradores");
+
+        if (!ok || !Array.isArray(data)) {
+            lista.innerHTML = "<p>Erro ao carregar compradores.</p>";
+            return;
+        }
+
+        if (data.length === 0) {
+            lista.innerHTML = "<p>Nenhuma compra registrada.</p>";
+            return;
+        }
+
+        const campo = filtro.value;
+
+        const compradores = [...data].sort((a, b) =>
+            Number(b[campo]) - Number(a[campo])
+        );
+
+        const maiorValor = Math.max(
+            ...compradores.map(c => Number(c[campo]))
+        );
+
+        lista.innerHTML = compradores.map(c => {
+            const valor = Number(c[campo]);
+            const porcentagem = maiorValor > 0
+                ? (valor / maiorValor) * 100
+                : 0;
+
+            const descricao = campo === "totalCompras"
+                ? `${valor} compra${valor !== 1 ? "s" : ""}`
+                : `${valor} item${valor !== 1 ? "s" : ""}`;
+
+            return `
+                <div class="comprador-item">
+                    <div class="comprador-info">
+                        <span>${c.comprador}</span>
+                        <span>${descricao}</span>
+                    </div>
+
+                    <div class="barra-fundo">
+                        <div class="barra-valor" style="width:${porcentagem}%"></div>
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+    } catch (err) {
+        lista.innerHTML = "<p>Erro ao carregar compradores.</p>";
+    }
 }
 
-function telaCadastro()       { window.location.href = "cadastro.html"; }
-function telaInicio()         { window.location.href = "dashbord.html"; }
+// ==========================================
+// NAVEGAÇÃO
+// ==========================================
+function telaCadastro() { window.location.href = "cadastro.html"; }
+function telaInicio() { window.location.href = "dashbord.html"; }
 function telaEntradaEsaidas() { window.location.href = "entradasEsaidas.html"; }
-function telaEstoque()        { window.location.href = "estoque.html"; }
+function telaEstoque() { window.location.href = "estoque.html"; }
 
 function sairConta() {
     localStorage.removeItem("token");

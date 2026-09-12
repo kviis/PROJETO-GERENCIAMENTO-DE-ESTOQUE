@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.vs/
+.env
+*.env
+backend/seguranca.env
+backend/estoque.db
+backend/teste-postgres.js
+backend/teste-modulos.js
+backend/controller/*.backup.js

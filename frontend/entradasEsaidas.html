@@ -1,19 +1,61 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="pt-br">
 <head>
+   <script src="front.js" defer></script>
+   <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Entradas e Saídas</title>
 </head>
 <body>
-    <div class="sidebar">
-    <h2>Painel de Mnitoramento</h2>
-     <ul>
-       <li type="button" id="inicio" onclick="telaInicio()">Início</li>
-       <li type="button" id="entradas" onclick="telaEntradaEsaidas()">Entradas e Saidas</li>
-       <li type="button" id="estoque" onclick="telaEstoque()">Estoque</li>
-       <li type="button" id="cadastrar" onclick="telaCadastro()">Cadastrar</li>
-     </ul>
+  <button type="button" id="menu-toggle" class="menu-toggle" aria-label="Abrir menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+ 
+  <div class="sidebar">
+    <h2>Painel de Monitoramento</h2>
+    <ul>
+      <li type="button" id="inicio" onclick="telaInicio()">Início</li>
+      <li type="button" id="entradas" onclick="telaEntradaEsaidas()">Entradas e Saidas</li>
+      <li type="button" id="estoque" onclick="telaEstoque()">Estoque</li>
+      <li type="button" id="cadastrar" onclick="telaCadastro()">Cadastrar</li>
+    </ul>
+  </div>
+ 
+  <div class="main">
+    <div class="box-movimentacoes">
+      <div class="box-entradas">
+        <h2>Últimas Entradas</h2>
+        <table>
+          <thead>
+             <tr>
+               <th>ID</th>
+               <th>Produto</th>
+               <th>Quantidade</th>
+               <th>Data</th>
+              </tr>
+            </thead>
+          <tbody id="corpoEntradas"></tbody>
+        </table>
+      </div>
+ 
+      <div class="box-saidas">
+        <h2>Últimas Saídas</h2>
+        <table>
+          <thead>
+            <tr>
+                <th>ID</th>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Comprador</th>
+                <th>Data</th>
+            </tr>
+          </thead>
+          <tbody id="corpoSaidas"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </body>
 </html>

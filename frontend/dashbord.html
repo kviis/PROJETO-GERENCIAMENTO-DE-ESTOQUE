@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <link rel="stylesheet" href="style.css">
     <script src="front.js" defer></script>
 
     <title>dashbord</title>
@@ -47,6 +47,20 @@
             <h3>saidas</h3>
             <p id="totalsaidas">0</p>
        </div>
+     </div>
+     <div class="grafico-compradores">
+     <div class="grafico-topo">
+        <h2>Frequência de compradores</h2>
+
+        <select id="filtroCompradores" onchange="carregarGraficoCompradores()">
+            <option value="totalCompras">Quantidade de compras</option>
+            <option value="totalItens">Total de itens comprados</option>
+        </select>
+     </div>
+
+          <div id="listaCompradores" class="lista-compradores">
+         <p>Carregando dados...</p>
+      </div>
      </div>
    </div> 
 </body>

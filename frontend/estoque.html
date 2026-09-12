@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+  <link rel="stylesheet" href="style.css">
   <script src="front.js" defer></script>
   <title>Estoque</title>
 </head>
@@ -31,13 +31,114 @@
             <th>Nome</th>
             <th>Quantidade</th>
             <th>Validade</th>
+            <th>Ação</th>
           </tr>
         </thead>
-        <tbody id="corpoEstoque"type="button"id="baixaestoque" value="baixa" onclick="baixa()">
+        <tbody id="corpoEstoque">
          
         </tbody>
       </table>
     </div>
   </div>
+  <div
+    id="modalSaida"
+    class="modal-saida"
+>
+
+    <div class="modal-conteudo">
+
+        <h2>Registrar saída</h2>
+
+        <p>
+            Produto:
+            <strong id="modalProduto"></strong>
+        </p>
+
+        <p>
+            Estoque disponível:
+            <strong id="modalEstoque"></strong>
+        </p>
+
+
+        <label>
+            Quantidade
+        </label>
+
+        <div class="controle-quantidade">
+
+            <button
+                type="button"
+                onclick="diminuirSaida()"
+            >
+                -
+            </button>
+
+            <input
+                id="quantidadeSaida"
+                type="number"
+                value="1"
+                min="1"
+                readonly
+            >
+
+            <button
+                type="button"
+                onclick="aumentarSaida()"
+            >
+                +
+            </button>
+
+        </div>
+
+
+        <label for="compradorSaida">
+            Comprador
+        </label>
+
+        <input
+            id="compradorSaida"
+            type="text"
+            placeholder="Nome do comprador"
+        >
+
+
+        <div class="resumo-venda">
+
+            <h3>Descrição da saída</h3>
+
+            <p>
+                Produto:
+                <span id="resumoProduto"></span>
+            </p>
+
+            <p>
+                Quantidade:
+                <span id="resumoQuantidade">1</span>
+            </p>
+
+        </div>
+
+
+        <div class="botoes-modal">
+
+            <button
+                type="button"
+                onclick="fecharModalSaida()"
+            >
+                Cancelar
+            </button>
+
+            <button
+                type="button"
+                onclick="confirmarSaida()"
+            >
+                Confirmar saída
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 </body>
 </html>

@@ -1,4 +1,7 @@
-node_modules
-.env
+node_modules/
+*.env
 seguranca.env
-
+estoque.db
+teste-postgres.js
+teste-modulos.js
+*.backup.js

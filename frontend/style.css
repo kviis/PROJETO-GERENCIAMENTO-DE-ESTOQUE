@@ -1,0 +1,683 @@
+/* ==========================================================================
+   SISTEMA DE ESTOQUE — FOLHA DE ESTILOS PRINCIPAL
+   --------------------------------------------------------------------------
+   Todo o visual do sistema é controlado pelas variáveis abaixo (:root).
+   Para mudar cores, espaçamentos ou arredondamento, basta editar os
+   valores nesta seção — o resto do arquivo se ajusta automaticamente.
+   ========================================================================== */
+
+:root {
+  /* Cores principais */
+  --cor-primaria: #4f46e5;       /* cor de destaque (botões, links, ícones ativos) */
+  --cor-primaria-hover: #4338ca;
+  --cor-secundaria: #10b981;     /* usada em ações positivas (ex: cadastrar) */
+  --cor-perigo: #ef4444;         /* usada em ações de risco (ex: sair, baixa) */
+  --cor-perigo-hover: #dc2626;
+
+  /* Sidebar */
+  --sidebar-bg: #1e1b4b;
+  --sidebar-bg-hover: #312e81;
+  --sidebar-texto: #e0e7ff;
+  --sidebar-largura: 250px;
+
+  /* Fundo e superfícies */
+  --cor-fundo: #f3f4f6;
+  --cor-superficie: #ffffff;
+  --cor-borda: #e5e7eb;
+
+  /* Texto */
+  --cor-texto: #1f2937;
+  --cor-texto-suave: #6b7280;
+
+  /* Layout */
+  --raio-borda: 10px;
+  --raio-borda-sm: 6px;
+  --sombra: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --sombra-hover: 0 4px 14px rgba(0, 0, 0, 0.1);
+  --espacamento: 20px;
+
+  /* Tipografia */
+  --fonte: "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* ==========================================================================
+   RESET / BASE
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--fonte);
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  line-height: 1.5;
+}
+
+h1, h2, h3 {
+  font-weight: 600;
+  color: var(--cor-texto);
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: var(--cor-primaria);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+input,
+button {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   BOTÕES (uso geral)
+   ========================================================================== */
+
+button,
+input[type="button"] {
+  cursor: pointer;
+  border: none;
+  border-radius: var(--raio-borda-sm);
+  padding: 10px 18px;
+  background-color: var(--cor-primaria);
+  color: #fff;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:hover,
+input[type="button"]:hover {
+  background-color: var(--cor-primaria-hover);
+}
+
+button:active,
+input[type="button"]:active {
+  transform: scale(0.97);
+}
+
+/* ==========================================================================
+   PÁGINA DE LOGIN  (index.html)
+   ========================================================================== */
+
+body:has(.box-login) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--sidebar-bg) 100%);
+}
+
+.box-login {
+  background-color: var(--cor-superficie);
+  padding: 40px 36px;
+  border-radius: var(--raio-borda);
+  box-shadow: var(--sombra-hover);
+  width: 100%;
+  max-width: 380px;
+}
+
+.box-login .titulo {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.box-login .titulo h1 {
+  font-size: 26px;
+  color: var(--cor-primaria);
+}
+
+.caixaLogin {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.caixaLogin input {
+  width: 100%;
+  padding: 12px 40px 12px 14px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda-sm);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.caixaLogin input:focus {
+  border-color: var(--cor-primaria);
+}
+
+.caixaLogin i {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--cor-texto-suave);
+}
+
+.lembre-me {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--cor-texto-suave);
+  margin-bottom: 20px;
+}
+
+.login-buttom input[type="button"] {
+  width: 100%;
+  padding: 12px;
+}
+
+.resgitro {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 14px;
+  color: var(--cor-texto-suave);
+}
+
+/* ==========================================================================
+   PÁGINA CRIAR USUÁRIO  (CriarUser.HTML)
+   ========================================================================== */
+
+body:has(.box-criar-user) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--sidebar-bg) 100%);
+}
+
+.box-criar-user {
+  background-color: var(--cor-superficie);
+  padding: 40px 36px;
+  border-radius: var(--raio-borda);
+  box-shadow: var(--sombra-hover);
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+
+.box-criar-user h1 {
+  color: var(--cor-primaria);
+  margin-bottom: 24px;
+  font-size: 24px;
+}
+
+/* classes "Ultilitarios" (cadastro.html) e "ultilitarios" (CriarUser.HTML)
+   recebem o mesmo estilo — cobrindo as duas grafias usadas no HTML */
+.Ultilitarios,
+.ultilitarios {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.Ultilitarios input,
+.ultilitarios input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda-sm);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.Ultilitarios input:focus,
+.ultilitarios input:focus {
+  border-color: var(--cor-primaria);
+}
+
+#create-user {
+  width: 100%;
+  background-color: var(--cor-secundaria);
+}
+
+#create-user:hover {
+  filter: brightness(0.92);
+}
+
+#resultado-criar {
+  margin-top: 14px;
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   SIDEBAR  (cadastro / estoque / dashboard / entradas e saídas)
+   ========================================================================== */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-largura);
+  height: 100vh;
+  background-color: var(--sidebar-bg);
+  color: var(--sidebar-texto);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h2 {
+  color: #fff;
+  font-size: 17px;
+  margin-bottom: 28px;
+  padding: 0 8px;
+}
+
+.sidebar ul {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sidebar li {
+  padding: 12px 14px;
+  border-radius: var(--raio-borda-sm);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  font-size: 15px;
+}
+
+.sidebar li:hover {
+  background-color: var(--sidebar-bg-hover);
+  color: #fff;
+}
+
+/* barra de topo com foto/sair, presente ao lado da sidebar */
+.caixa-logalt {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: var(--sidebar-largura);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  padding: 0 var(--espacamento);
+  background-color: var(--cor-superficie);
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.caixa-logalt input[type="image"] {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--cor-borda);
+}
+
+.caixa-logalt input[type="button"]#sair {
+  background-color: var(--cor-perigo);
+  padding: 8px 16px;
+}
+
+.caixa-logalt input[type="button"]#sair:hover {
+  background-color: var(--cor-perigo-hover);
+}
+
+/* área de conteúdo principal, deslocada pela sidebar/topbar */
+.main {
+  margin-left: var(--sidebar-largura);
+  padding-top: 84px;
+  padding-left: var(--espacamento);
+  padding-right: var(--espacamento);
+  padding-bottom: var(--espacamento);
+}
+
+/* fallback para páginas que ainda não usam .main (ex: cadastro.html) */
+.box-cadastro {
+  margin-left: calc(var(--sidebar-largura) + var(--espacamento));
+  margin-top: calc(64px + var(--espacamento));
+  margin-right: var(--espacamento);
+  background-color: var(--cor-superficie);
+  padding: 30px;
+  border-radius: var(--raio-borda);
+  box-shadow: var(--sombra);
+  max-width: 420px;
+}
+
+.box-cadastro h1 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: var(--cor-primaria);
+}
+
+.cadastrar-buttom button {
+  width: 100%;
+  background-color: var(--cor-secundaria);
+  margin-top: 4px;
+}
+
+.cadastrar-buttom button:hover {
+  filter: brightness(0.92);
+}
+
+#resultado-cadastro {
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--cor-texto-suave);
+}
+
+/* ==========================================================================
+   DASHBOARD  (dashbord.html)
+   ========================================================================== */
+
+.box-dashboard h1 {
+  font-size: 24px;
+  margin-bottom: var(--espacamento);
+  text-transform: capitalize;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  background-color: var(--cor-superficie);
+  border-radius: var(--raio-borda);
+  box-shadow: var(--sombra);
+  padding: 22px;
+  text-align: center;
+  border-top: 4px solid var(--cor-primaria);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--sombra-hover);
+  transform: translateY(-2px);
+}
+
+.card h3 {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--cor-texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 10px;
+}
+
+.card p {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--cor-primaria);
+}
+
+/* ==========================================================================
+   ESTOQUE  (estoque.html) — tabela
+   ========================================================================== */
+
+.box-estoque {
+  background-color: var(--cor-superficie);
+  border-radius: var(--raio-borda);
+  box-shadow: var(--sombra);
+  padding: var(--espacamento);
+}
+
+.box-estoque h1 {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.box-estoque h2 {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--cor-texto-suave);
+  margin-bottom: var(--espacamento);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+thead th {
+  text-align: left;
+  padding: 12px 14px;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-suave);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  border-bottom: 2px solid var(--cor-borda);
+}
+
+tbody td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+tbody tr:hover {
+  background-color: var(--cor-fundo);
+}
+
+tbody input[type="button"] {
+  background-color: var(--cor-perigo);
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+tbody input[type="button"]:hover {
+  background-color: var(--cor-perigo-hover);
+}
+
+/* ==========================================================================
+   RESPONSIVO
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .sidebar ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .caixa-logalt {
+    left: 0;
+    position: relative;
+    height: auto;
+    padding: 12px var(--espacamento);
+  }
+
+  .main,
+  .box-cadastro {
+    margin-left: 0;
+    margin-top: var(--espacamento);
+    padding-top: var(--espacamento);
+  }
+
+  .box-login,
+  .box-criar-user {
+    margin: 20px;
+  }
+}
+
+.acao-baixa {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.acao-baixa .btn-dec,
+.acao-baixa .btn-inc {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+.acao-baixa .contador-baixa {
+    min-width: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+.acao-baixa .botao-baixa {
+    margin-left: 8px;
+    cursor: pointer;
+}
+.modal-saida {
+    display: none;
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.6);
+
+    align-items: center;
+    justify-content: center;
+
+    z-index: 1000;
+}
+
+
+.modal-saida.ativo {
+    display: flex;
+}
+
+
+.modal-conteudo {
+    background: white;
+
+    width: 420px;
+    max-width: 90%;
+
+    padding: 30px;
+
+    border-radius: 12px;
+}
+
+
+.modal-conteudo label {
+    display: block;
+
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+
+.modal-conteudo input {
+    width: 100%;
+
+    padding: 10px;
+
+    box-sizing: border-box;
+}
+
+
+.controle-quantidade {
+    display: flex;
+    gap: 10px;
+
+    align-items: center;
+}
+
+
+.controle-quantidade input {
+    text-align: center;
+}
+
+
+.resumo-venda {
+    margin-top: 20px;
+
+    padding: 15px;
+
+    background: #f2f2f2;
+
+    border-radius: 8px;
+}
+
+
+.botoes-modal {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 20px;
+}
+.grafico-compradores {
+    margin-top: 30px;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+}
+
+.grafico-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.grafico-topo h2 {
+    margin: 0;
+}
+
+.grafico-topo select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.lista-compradores {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.comprador-item {
+    width: 100%;
+}
+
+.comprador-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.barra-fundo {
+    width: 100%;
+    height: 22px;
+    background: #e6e6e6;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.barra-valor {
+    height: 100%;
+    background: #2f80ed;
+    border-radius: 20px;
+    transition: width 0.4s ease;
+}
