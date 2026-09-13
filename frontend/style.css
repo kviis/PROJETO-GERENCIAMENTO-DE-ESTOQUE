@@ -681,3 +681,34 @@ tbody input[type="button"]:hover {
     border-radius: 20px;
     transition: width 0.4s ease;
 }
+.acoes{
+    display:flex;
+    gap:8px;
+}
+
+.botao-editar{
+    background:#16a34a;
+    color:white;
+    border:none;
+    padding:6px 12px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.botao-excluir{
+    background:#dc2626;
+    color:white;
+    border:none;
+    padding:6px 12px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.botao-baixa{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:6px 12px;
+    border-radius:8px;
+    cursor:pointer;
+}

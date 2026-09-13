@@ -169,23 +169,42 @@ async function carregarEstoque() {
         }
 
         corpo.innerHTML = data.map(item => `
-            <tr>
-                <td>${item.id}</td>
-                <td>${item.nome}</td>
-                <td>${item.quantidade}</td>
-                <td>${item.validade ? item.validade.split("T")[0] : "-"}</td>
-                <td class="acao-baixa">
-                    <button
-                        type="button"
-                        class="botao-baixa"
-                        data-id="${item.id}"
-                        data-nome="${item.nome}"
-                        data-quantidade="${item.quantidade}">
-                        Dar baixa
-                    </button>
-                </td>
-            </tr>
-        `).join("");
+    <tr>
+        <td>${item.id}</td>
+        <td>${item.nome}</td>
+        <td>${item.quantidade}</td>
+        <td>${item.validade ? item.validade.split("T")[0] : "-"}</td>
+
+        <td class="acoes">
+            <button
+                type="button"
+                class="botao-editar"
+                data-id="${item.id}"
+                data-nome="${item.nome}"
+                data-quantidade="${item.quantidade}"
+                data-validade="${item.validade || ''}">
+                Editar
+            </button>
+
+            <button
+                type="button"
+                class="botao-baixa"
+                data-id="${item.id}"
+                data-nome="${item.nome}"
+                data-quantidade="${item.quantidade}">
+                Dar baixa
+            </button>
+
+            <button
+                type="button"
+                class="botao-excluir"
+                data-id="${item.id}"
+                data-nome="${item.nome}">
+                Excluir
+            </button>
+        </td>
+    </tr>
+`).join("");
 
         corpo.querySelectorAll(".botao-baixa").forEach(botao => {
             botao.addEventListener("click", () => {
@@ -196,6 +215,26 @@ async function carregarEstoque() {
                 );
             });
         });
+
+        corpo.querySelectorAll(".botao-editar").forEach(botao => {
+    botao.addEventListener("click", () => {
+        abrirModalEditar(
+            Number(botao.dataset.id),
+            botao.dataset.nome,
+            Number(botao.dataset.quantidade),
+            botao.dataset.validade
+        );
+    });
+});
+
+corpo.querySelectorAll(".botao-excluir").forEach(botao => {
+    botao.addEventListener("click", () => {
+        excluirProduto(
+            Number(botao.dataset.id),
+            botao.dataset.nome
+        );
+    });
+});
     } catch (err) {
         console.error("Erro ao carregar estoque:", err);
         corpo.innerHTML = "<tr><td colspan='5'>Erro ao carregar estoque.</td></tr>";
@@ -477,7 +516,82 @@ async function carregarGraficoCompradores() {
         lista.innerHTML = "<p>Erro ao carregar compradores.</p>";
     }
 }
+function abrirModalEditar(id, nome, quantidade, validade) {
+    document.getElementById("editarId").value = id;
+    document.getElementById("editarNome").value = nome;
+    document.getElementById("editarQuantidade").value = quantidade;
+    document.getElementById("editarValidade").value =
+        validade ? validade.split("T")[0] : "";
 
+    document.getElementById("modalEditar").classList.add("ativo");
+}
+
+function fecharModalEditar() {
+    document.getElementById("modalEditar").classList.remove("ativo");
+}
+
+async function salvarEdicao(){
+
+    const id=document.getElementById("editarId").value;
+
+    const nome=document.getElementById("editarNome").value.trim();
+
+    const quantidade=Number(
+        document.getElementById("editarQuantidade").value
+    );
+
+    const validade=document.getElementById("editarValidade").value;
+
+    const {ok,data}=await apiRequest(
+        "/movimentar/"+id,
+        {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                nome,
+                quantidade,
+                validade
+            })
+        }
+    );
+
+    if(!ok){
+        alert(data.erro);
+        return;
+    }
+
+    alert("Produto atualizado!");
+
+    fecharModalEditar();
+
+    carregarEstoque();
+}
+async function excluirProduto(id,nome){
+
+    const confirmar=confirm(
+        `Deseja excluir "${nome}" do estoque?`
+    );
+
+    if(!confirmar) return;
+
+    const {ok,data}=await apiRequest(
+        "/estoque/"+id,
+        {
+            method:"DELETE"
+        }
+    );
+
+    if(!ok){
+        alert(data.erro);
+        return;
+    }
+
+    alert("Produto excluído!");
+
+    carregarEstoque();
+}
 // ==========================================
 // NAVEGAÇÃO
 // ==========================================

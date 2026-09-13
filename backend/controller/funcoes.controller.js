@@ -161,10 +161,11 @@ async function cadastrarItem(req, res) {
 async function editarItens(req, res) {
     const { id } = req.params;
     const { nome, quantidade, validade } = req.body;
+    const qtd = Number(quantidade);
 
-    if (!nome || !quantidade || !validade) {
+    if (!nome || !Number.isInteger(qtd) || qtd < 0) {
         return res.status(400).json({
-            erro: "campos obrigatorios"
+            erro: "Nome e quantidade válida são obrigatórios."
         });
     }
 
@@ -178,7 +179,7 @@ async function editarItens(req, res) {
 
         if (!item) {
             return res.status(404).json({
-                erro: "item nao encontrado"
+                erro: "Item não encontrado."
             });
         }
 
@@ -186,19 +187,19 @@ async function editarItens(req, res) {
             `UPDATE estoque
              SET nome=$1, quantidade=$2, validade=$3
              WHERE id=$4`,
-            [nome, quantidade, validade, id]
+            [nome, qtd, validade || null, id]
         );
 
         return res.status(200).json({
-            message: "item atualizado"
+            message: "Item atualizado com sucesso."
         });
+
     } catch (err) {
         return res.status(500).json({
-            erro: "erro ao editar item: " + err.message
+            erro: "Erro ao editar item: " + err.message
         });
     }
 }
-
 // editar item parcialmente
 async function editarItenParcial(req, res) {
     const { id } = req.params;
@@ -376,6 +377,55 @@ async function listaCompradores(req, res) {
         });
     }
 }
+async function deletarItem(req,res){
+
+    const {id}= req.params;
+    const client = await pool.connect();
+    
+    try {
+        
+         await client.query("BEGIN");
+//procura o item
+         const resultado = await client.query("SELECT * FROM estoque WHERE id=$1",[id]);
+
+         const item = resultado.rows[0];
+
+         if(!item){
+
+            await client.query("ROLLBACK");
+            return res.status(404).json({erro:"item nao encontrado"});
+
+         }
+         
+        // remove do estoque
+        await client.query("DELETE FROM estoque WHERE id = $1",[id]);
+        
+        //salva no historico 
+        await client.query(`INSERT INTO movimentacoes
+            (produto, quantidade, tipo, comprador, data)
+            VALUES ($1,$2,$3,$4,CURRENT_TIMESTAMP)`,
+            [
+                item.nome,
+                item.quantidade,
+                "saida",
+                "ITEM EXCLUÍDO"
+            ])
+            await client.query("COMMIT");
+
+            return res.status(200).json({message:"produto excluido com sucesso"});
+
+        } catch (err){
+            await client.query("ROLLBACK")
+            return res.status(500).json({erro: err.message});
+
+        } finally {client.release();
+    
+    }
+
+
+    }
+
+
 
 module.exports = {
     criarlogin,
@@ -386,5 +436,6 @@ module.exports = {
     editarItenParcial,
     listarMovimentacoes,
     registrarMovimentacao,
-    listaCompradores
+    listaCompradores,
+    deletarItem
 };

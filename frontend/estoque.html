@@ -140,5 +140,31 @@
     </div>
 
 </div>
+
+<div id="modalEditar" class="modal-saida">
+
+    <div class="modal-conteudo">
+
+        <h2>Editar Produto</h2>
+
+        <input type="hidden" id="editarId">
+
+        <label>Nome</label>
+        <input id="editarNome" type="text">
+
+        <label>Quantidade</label>
+        <input id="editarQuantidade" type="number" min="1">
+
+        <label>Validade</label>
+        <input id="editarValidade" type="date">
+
+        <div class="botoes-modal">
+           <button type="button" onclick="fecharModalEditar()">Cancelar</button>
+            <button type="button" onclick="salvarEdicao()">Salvar Alterações</button>
+        </div>
+
+    </div>
+
+</div>
 </body>
 </html>

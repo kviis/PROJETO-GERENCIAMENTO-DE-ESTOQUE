@@ -1,6 +1,6 @@
 const express = require('express');
 const router  = express.Router();
-const {criarlogin, logarSistema,listarEstoque,cadastrarItem,editarItens,editarItenParcial,listarMovimentacoes,registrarMovimentacao,listaCompradores} = require('../controller/funcoes.controller');
+const {criarlogin, logarSistema,listarEstoque,cadastrarItem,editarItens,editarItenParcial,listarMovimentacoes,registrarMovimentacao,listaCompradores,deletarItem} = require('../controller/funcoes.controller');
 
 
 router.post('/criarlogin', criarlogin);
@@ -17,5 +17,6 @@ router.post('/movimentacoes', registrarMovimentacao);
 // Ranking de compradores
 router.get('/compradores', listaCompradores);
 
+router.delete("/estoque/:id", deletarItem);
 
 module.exports = router;
