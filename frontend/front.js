@@ -2,7 +2,7 @@ const API = window.location.hostname === "localhost"
     ? "http://localhost:3000"
     : "";
 let produtoSaida = null;
-
+let estoqueAtual = [];
 // ==========================================
 // INICIALIZAÇÃO
 // ==========================================
@@ -20,7 +20,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("corpoEntradas")) carregarEntradasSaidas();
     
     if (document.getElementById("listaCompradores")) { carregarGraficoCompradores();}
+    const buscaEstoque = document.getElementById("buscaEstoque");
+    const filtroEstoque = document.getElementById("filtroEstoque");
 
+    if (buscaEstoque) {
+         buscaEstoque.addEventListener("input", filtrarEstoque);
+    }
+
+    if (filtroEstoque) {
+    filtroEstoque.addEventListener("change", filtrarEstoque);
+    }
 });
 
 // ==========================================
@@ -163,82 +172,124 @@ async function carregarEstoque() {
             return;
         }
 
-        if (data.length === 0) {
+        estoqueAtual = data;
+
+        if (estoqueAtual.length === 0) {
             corpo.innerHTML = "<tr><td colspan='5'>Nenhum item no estoque.</td></tr>";
             return;
         }
 
-        corpo.innerHTML = data.map(item => `
-    <tr>
-        <td>${item.id}</td>
-        <td>${item.nome}</td>
-        <td>${item.quantidade}</td>
-        <td>${item.validade ? item.validade.split("T")[0] : "-"}</td>
+        renderizarEstoque(estoqueAtual);
 
-        <td class="acoes">
-            <button
-                type="button"
-                class="botao-editar"
-                data-id="${item.id}"
-                data-nome="${item.nome}"
-                data-quantidade="${item.quantidade}"
-                data-validade="${item.validade || ''}">
-                Editar
-            </button>
-
-            <button
-                type="button"
-                class="botao-baixa"
-                data-id="${item.id}"
-                data-nome="${item.nome}"
-                data-quantidade="${item.quantidade}">
-                Dar baixa
-            </button>
-
-            <button
-                type="button"
-                class="botao-excluir"
-                data-id="${item.id}"
-                data-nome="${item.nome}">
-                Excluir
-            </button>
-        </td>
-    </tr>
-`).join("");
-
-        corpo.querySelectorAll(".botao-baixa").forEach(botao => {
-            botao.addEventListener("click", () => {
-                abrirModalSaida(
-                    Number(botao.dataset.id),
-                    botao.dataset.nome,
-                    Number(botao.dataset.quantidade)
-                );
-            });
-        });
-
-        corpo.querySelectorAll(".botao-editar").forEach(botao => {
-    botao.addEventListener("click", () => {
-        abrirModalEditar(
-            Number(botao.dataset.id),
-            botao.dataset.nome,
-            Number(botao.dataset.quantidade),
-            botao.dataset.validade
-        );
-    });
-});
-
-corpo.querySelectorAll(".botao-excluir").forEach(botao => {
-    botao.addEventListener("click", () => {
-        excluirProduto(
-            Number(botao.dataset.id),
-            botao.dataset.nome
-        );
-    });
-});
     } catch (err) {
         console.error("Erro ao carregar estoque:", err);
         corpo.innerHTML = "<tr><td colspan='5'>Erro ao carregar estoque.</td></tr>";
     }
+}
+function renderizarEstoque(lista) {
+    const corpo = document.getElementById("corpoEstoque");
+    if (!corpo) return;
+
+    if (lista.length === 0) {
+        corpo.innerHTML = "<tr><td colspan='5'>Nenhum item encontrado.</td></tr>";
+        return;
+    }
+
+    corpo.innerHTML = lista.map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.nome}</td>
+            <td>${item.quantidade}</td>
+            <td>${item.validade ? item.validade.split("T")[0] : "-"}</td>
+            <td class="acoes">
+                <button type="button"
+                    class="botao-editar"
+                    data-id="${item.id}"
+                    data-nome="${item.nome}"
+                    data-quantidade="${item.quantidade}"
+                    data-validade="${item.validade || ''}">
+                    Editar
+                </button>
+
+                <button type="button"
+                    class="botao-baixa"
+                    data-id="${item.id}"
+                    data-nome="${item.nome}"
+                    data-quantidade="${item.quantidade}">
+                    Dar baixa
+                </button>
+
+                <button type="button"
+                    class="botao-excluir"
+                    data-id="${item.id}"
+                    data-nome="${item.nome}">
+                    Excluir
+                </button>
+            </td>
+        </tr>
+    `).join("");
+
+    adicionarEventosEstoque();
+}
+
+function adicionarEventosEstoque() {
+    const corpo = document.getElementById("corpoEstoque");
+    if (!corpo) return;
+
+    corpo.querySelectorAll(".botao-baixa").forEach(botao => {
+        botao.addEventListener("click", () => {
+            abrirModalSaida(
+                Number(botao.dataset.id),
+                botao.dataset.nome,
+                Number(botao.dataset.quantidade)
+            );
+        });
+    });
+
+    corpo.querySelectorAll(".botao-editar").forEach(botao => {
+        botao.addEventListener("click", () => {
+            abrirModalEditar(
+                Number(botao.dataset.id),
+                botao.dataset.nome,
+                Number(botao.dataset.quantidade),
+                botao.dataset.validade
+            );
+        });
+    });
+
+    corpo.querySelectorAll(".botao-excluir").forEach(botao => {
+        botao.addEventListener("click", () => {
+            excluirProduto(
+                Number(botao.dataset.id),
+                botao.dataset.nome
+            );
+        });
+    });
+}
+function filtrarEstoque() {
+    const busca = document.getElementById("buscaEstoque").value.toLowerCase();
+    const filtro = document.getElementById("filtroEstoque").value;
+
+    let lista = estoqueAtual.filter(item => {
+        const correspondeBusca =
+            item.nome.toLowerCase().includes(busca) ||
+            String(item.id).includes(busca);
+
+        let correspondeFiltro = true;
+
+        if (filtro === "baixo") {
+            correspondeFiltro = Number(item.quantidade) > 0 &&
+                                Number(item.quantidade) <= 5;
+        }
+
+        if (filtro === "zerado") {
+            correspondeFiltro = Number(item.quantidade) === 0;
+        }
+
+        return correspondeBusca && correspondeFiltro;
+    });
+
+    renderizarEstoque(lista);
 }
 
 // ==========================================

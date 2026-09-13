@@ -24,6 +24,20 @@
     <div class="box-estoque">
       <h1>Estoque</h1>
       <h2>Itens em Estoque</h2>
+     
+        <div class="filtros-estoque">
+         <input
+           type="text"
+           id="buscaEstoque"
+           placeholder="Buscar por nome ou ID">
+
+        <select id="filtroEstoque">
+           <option value="todos">Todos os produtos</option>
+           <option value="baixo">Estoque baixo</option>
+           <option value="zerado">Estoque zerado</option>
+        </select>
+      </div>
+
       <table>
         <thead>
           <tr>
