@@ -1,39 +1,31 @@
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="utf-8">
-    <title>Login</title>
-    <script src="front.js" defer></script>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://unpkg.com/preact@10.5.0/dist/preact.min.js"></script>
-  </head>
-  <body>
-    <div class="box-login">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>KVS FLOW - Login</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="front.js" defer></script>
+</head>
+<body class="login-page">
+  <main class="login-layout">
+    <section class="login-brand" aria-label="KVS FLOW">
+      <img src="img/logo-kvs-flow.png" alt="KVS FLOW - Sistema de Estoque" class="logo-login">
+      <p>Gestão de estoque</p>
+      <span>BY KVIIS</span>
+    </section>
+    <section class="box-login">
       <form>
-        <div class="titulo">
-          <h1>Login</h1>
-        </div>
-        <div class="caixaLogin">
-          <input type="email" id="username" placeholder="username">
-          <i class="bx bxs-user"></i>
-        </div>
-        <div class="caixaLogin">
-          <input type="password" id="password" placeholder="password">
-          <i class="bx bxs-lock-alt"></i>
-        </div>
-        <div id="resultado" style="color:red; margin-bottom: 10px;"></div>
-        <div class="lembre-me">
-          <label><input type="checkbox"> lembre-me</label>
-          <a href="#">Ajuda</a>
-        </div>
-        <div class="login-buttom">
-          <input type="button" id="loginbtn" value="Logar">
-    
-        </div>
-        <div class="resgitro">
-          <p>Não tenho conta? <a href="CriarUser.HTML">Criar</a></p>
-        </div>
+        <div class="titulo"><h2>Login</h2><p>Acesse sua conta</p></div>
+        <div class="caixaLogin"><input type="email" id="username" placeholder="E-mail" autocomplete="username"></div>
+        <div class="caixaLogin"><input type="password" id="password" placeholder="Senha" autocomplete="current-password"></div>
+        <div id="resultado"></div>
+        <div class="lembre-me"><label><input type="checkbox"> Lembrar-me</label><a href="#">Ajuda</a></div>
+        <button type="button" id="loginbtn" class="btn-kvs">Entrar</button>
+        <div class="resgitro">Não possui uma conta? <a href="CriarUser.HTML">Criar conta</a></div>
       </form>
-    </div>
-  </body>
+    </section>
+  </main>
+</body>
 </html>
+

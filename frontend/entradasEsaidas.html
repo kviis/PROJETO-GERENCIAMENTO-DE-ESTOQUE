@@ -1,61 +1,22 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
-   <script src="front.js" defer></script>
-   <link rel="stylesheet" href="style.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entradas e Saídas</title>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>KVS FLOW - Entradas e Saídas</title><link rel="stylesheet" href="style.css"><script src="front.js" defer></script>
 </head>
 <body>
-  <button type="button" id="menu-toggle" class="menu-toggle" aria-label="Abrir menu">
-    <span></span><span></span><span></span>
-  </button>
-  <div id="sidebar-overlay" class="sidebar-overlay"></div>
- 
-  <div class="sidebar">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><span class="kvs">KVS</span><span class="flow">FLOW</span><span class="by">by KVIIS</span></div>
     <h2>Painel de Monitoramento</h2>
-    <ul>
-      <li type="button" id="inicio" onclick="telaInicio()">Início</li>
-      <li type="button" id="entradas" onclick="telaEntradaEsaidas()">Entradas e Saidas</li>
-      <li type="button" id="estoque" onclick="telaEstoque()">Estoque</li>
-      <li type="button" id="cadastrar" onclick="telaCadastro()">Cadastrar</li>
-    </ul>
-  </div>
- 
-  <div class="main">
-    <div class="box-movimentacoes">
-      <div class="box-entradas">
-        <h2>Últimas Entradas</h2>
-        <table>
-          <thead>
-             <tr>
-               <th>ID</th>
-               <th>Produto</th>
-               <th>Quantidade</th>
-               <th>Data</th>
-              </tr>
-            </thead>
-          <tbody id="corpoEntradas"></tbody>
-        </table>
-      </div>
- 
-      <div class="box-saidas">
-        <h2>Últimas Saídas</h2>
-        <table>
-          <thead>
-            <tr>
-                <th>ID</th>
-                <th>Produto</th>
-                <th>Quantidade</th>
-                <th>Comprador</th>
-                <th>Data</th>
-            </tr>
-          </thead>
-          <tbody id="corpoSaidas"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+    <ul><li onclick="telaInicio()">Início</li><li onclick="telaEntradaEsaidas()">Entradas e Saídas</li><li onclick="telaEstoque()">Estoque</li><li onclick="telaCadastro()">Cadastrar</li></ul>
+  </aside>
+  <main class="main">
+    <div class="caixa-logalt"><input type="button" id="sair" value="Sair" onclick="sairConta()"></div>
+    <div class="page-heading"><h1>Entradas e Saídas</h1><p>Últimas movimentações registradas</p></div>
+    <section class="box-movimentacoes">
+      <div class="box-entradas"><h2>Últimas Entradas</h2><table><thead><tr><th>ID</th><th>Produto</th><th>Quantidade</th><th>Data</th></tr></thead><tbody id="corpoEntradas"></tbody></table></div>
+      <div class="box-saidas"><h2>Últimas Saídas</h2><table><thead><tr><th>ID</th><th>Produto</th><th>Quantidade</th><th>Comprador</th><th>Data</th></tr></thead><tbody id="corpoSaidas"></tbody></table></div>
+    </section>
+  </main>
 </body>
 </html>

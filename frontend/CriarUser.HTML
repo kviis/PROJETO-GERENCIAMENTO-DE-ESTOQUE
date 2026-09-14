@@ -1,28 +1,72 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-   <head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="stylesheet" href="style.css">
-     <script src="front.js" defer></script>
-     <title>Criar Usuario</title>
-   </head>
-<body>  
-    <div class="box-criar-user">
-       <h1>Criar Login</h1>
-        <div class="ultilitarios">
-            <input type="email" id="novo-email" placeholder="email">
-        </div> 
-        <div class="ultilitarios">
-            <input type="password" id="nova-senha" placeholder="senha">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+  <title>KVS FLOW - Criar usuário</title>
+
+  <link rel="stylesheet" href="style.css">
+  <script src="front.js" defer></script>
+</head>
+
+<body class="criar-user-page">
+
+ <main class="login-layout">
+    <section class="login-brand" aria-label="KVS FLOW">
+      <img src="img/logo-kvs-flow.png" alt="KVS FLOW - Sistema de Estoque" class="logo-login">
+      <p>Gestão de estoque</p>
+      <span>BY KVIIS</span>
+    </section>
+
+    <section class="criar-user-wrapper">
+
+      <div class="box-criar-user">
+
+        <div class="titulo">
+          <h1>Criar conta</h1>
+          <p>Cadastre um novo usuário</p>
         </div>
-        <div class="ultilitarios">
-            <input type="password" id="confirmar-senha" placeholder="confirmar senha">
+
+        <input
+          type="email"
+          id="novo-email"
+          placeholder="E-mail"
+          autocomplete="email">
+
+        <input
+          type="password"
+          id="nova-senha"
+          placeholder="Senha"
+          autocomplete="new-password">
+
+        <input
+          type="password"
+          id="confirmar-senha"
+          placeholder="Confirmar senha"
+          autocomplete="new-password">
+
+        <button
+          type="button"
+          id="create-user">
+          Criar
+        </button>
+
+        <div id="resultado-criar"></div>
+
+        <div class="voltar-login">
+          <a href="index.html">
+            Voltar para o login
+          </a>
         </div>
-        <div class="ultilitarios">
-            <button id="create-user">Criar</button>
-        </div>
-        <p id="resultado-criar"></p>
-    </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
 </body>
+
 </html>

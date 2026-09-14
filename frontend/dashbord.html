@@ -10,58 +10,59 @@
 
 </head>
 <body>
-  <div class="sidebar">
-    <h2>Painel de Mnitoramento</h2>
-     <ul>
-       <li type="button" id="inicio" onclick="telaInicio()">Início</li>
-       <li type="button" id="entradas" onclick="telaEntradaEsaidas()">Entradas e Saidas</li>
-       <li type="button" id="estoque" onclick="telaEstoque()">Estoque</li>
-       <li type="button" id="cadastrar" onclick="telaCadastro()">Cadastrar</li>
-     </ul>
+  <aside class="sidebar">
+    <div class="sidebar-brand"><span class="kvs">KVS</span><span class="flow">FLOW</span><span class="by">by KVIIS</span></div>
+    <h2>Painel de Monitoramento</h2>
+    <ul><li onclick="telaInicio()">Início</li><li onclick="telaEntradaEsaidas()">Entradas e Saídas</li><li onclick="telaEstoque()">Estoque</li><li onclick="telaCadastro()">Cadastrar</li></ul>
+  </aside>
   </div>
-  <div class="caixa-logalt">
-        <input type="image" name="conta" id="conta" src="" alt="fotoPerfil">      
-        <input type="button" id="sair" value="sair" onclick="sairConta()">
-  </div>
+
   <div class="main">
-     <div class="box-dashboard">
-     
-    
-      <h1>painel de controle</h1>
-    
-     </div>
-     <div class="cards">
-       <div class="card">
-            <h3>produtos</h3>
-            <p id="totalProdutos">0</p>       
-          </div>
-       <div class="card">
-            <h3>itens em estoque</h3>
-            <p id="totalestoque">0</p>
-       </div>
-       <div class="card">
-        <h3>entradas</h3>
-        <p id="totalEntradas">0</p>  
+    <div class="caixa-logalt">
+        <input type="image" name="conta" id="conta" src="" alt="fotoPerfil">
+        <input type="button" id="sair" value="sair" onclick="sairConta()">
+    </div>
+
+    <div class="box-dashboard">
+        <h1>Painel de controle</h1>
+    </div>
+
+    <div class="cards">
+        <div class="card">
+            <h3>Produtos</h3>
+            <p id="totalProdutos">0</p>
         </div>
-       <div class="card">
-            <h3>saidas</h3>
+
+        <div class="card">
+            <h3>Itens em estoque</h3>
+            <p id="totalestoque">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Entradas</h3>
+            <p id="totalEntradas">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Saídas</h3>
             <p id="totalsaidas">0</p>
-       </div>
-     </div>
-     <div class="grafico-compradores">
-     <div class="grafico-topo">
-        <h2>Frequência de compradores</h2>
+        </div>
+    </div>
 
-        <select id="filtroCompradores" onchange="carregarGraficoCompradores()">
-            <option value="totalCompras">Quantidade de compras</option>
-            <option value="totalItens">Total de itens comprados</option>
-        </select>
-     </div>
+    <div class="grafico-compradores">
+        <div class="grafico-topo">
+            <h2>Frequência de compradores</h2>
 
-          <div id="listaCompradores" class="lista-compradores">
-         <p>Carregando dados...</p>
-      </div>
-     </div>
-   </div> 
+            <select id="filtroCompradores" onchange="carregarGraficoCompradores()">
+                <option value="totalCompras">Quantidade de compras</option>
+                <option value="totalItens">Total de itens comprados</option>
+            </select>
+        </div>
+
+        <div id="listaCompradores" class="lista-compradores">
+            <p>Carregando dados...</p>
+        </div>
+    </div>
+</div>
 </body>
 </html>

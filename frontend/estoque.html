@@ -1,184 +1,35 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <script src="front.js" defer></script>
-  <title>Estoque</title>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>KVS FLOW - Estoque</title><link rel="stylesheet" href="style.css"><script src="front.js" defer></script>
 </head>
 <body>
-  <div class="sidebar">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><span class="kvs">KVS</span><span class="flow">FLOW</span><span class="by">by KVIIS</span></div>
     <h2>Painel de Monitoramento</h2>
-    <ul>
-      <li onclick="telaInicio()">Início</li>
-      <li onclick="telaEntradaEsaidas()">Entradas e Saídas</li>
-      <li onclick="telaEstoque()">Estoque</li>
-      <li onclick="telaCadastro()">Cadastrar</li>
-    </ul>
-  </div>
-  <div class="caixa-logalt">
-    <input type="button" id="sair" value="sair" onclick="sairConta()">
-  </div>
-  <div class="main">
-    <div class="box-estoque">
-      <h1>Estoque</h1>
-      <h2>Itens em Estoque</h2>
-     
-        <div class="filtros-estoque">
-         <input
-           type="text"
-           id="buscaEstoque"
-           placeholder="Buscar por nome ou ID">
+    <ul><li onclick="telaInicio()">Início</li><li onclick="telaEntradaEsaidas()">Entradas e Saídas</li><li onclick="telaEstoque()">Estoque</li><li onclick="telaCadastro()">Cadastrar</li></ul>
+  </aside>
+  <main class="main">
+    <div class="caixa-logalt"><input type="button" id="sair" value="Sair" onclick="sairConta()"></div>
+    <div class="page-heading"><h1>Estoque</h1><p>Consulte e gerencie os itens cadastrados</p></div>
+    <section class="box-estoque">
+      <h1>Itens em estoque</h1><h2>Busca, filtros e movimentações</h2>
+      <div class="filtros-estoque"><input type="text" id="buscaEstoque" placeholder="Buscar por nome ou ID"><select id="filtroEstoque"><option value="todos">Todos os produtos</option><option value="baixo">Estoque baixo</option><option value="zerado">Estoque zerado</option></select></div>
+      <table><thead><tr><th>ID</th><th>Nome</th><th>Quantidade</th><th>Validade</th><th>Ação</th></tr></thead><tbody id="corpoEstoque"></tbody></table>
+    </section>
+  </main>
 
-        <select id="filtroEstoque">
-           <option value="todos">Todos os produtos</option>
-           <option value="baixo">Estoque baixo</option>
-           <option value="zerado">Estoque zerado</option>
-        </select>
-      </div>
+  <div id="modalSaida" class="modal-saida"><div class="modal-conteudo">
+    <h2>Registrar saída</h2><p>Produto: <strong id="modalProduto"></strong></p><p>Estoque disponível: <strong id="modalEstoque"></strong></p>
+    <label>Quantidade</label><div class="controle-quantidade"><button type="button" onclick="diminuirSaida()">−</button><input id="quantidadeSaida" type="number" value="1" min="1" readonly><button type="button" onclick="aumentarSaida()">+</button></div>
+    <label for="compradorSaida">Comprador</label><input id="compradorSaida" type="text" placeholder="Nome do comprador">
+    <div class="resumo-venda"><h3>Descrição da saída</h3><p>Produto: <span id="resumoProduto"></span></p><p>Quantidade: <span id="resumoQuantidade">1</span></p></div>
+    <div class="botoes-modal"><button type="button" onclick="fecharModalSaida()">Cancelar</button><button type="button" onclick="confirmarSaida()">Confirmar saída</button></div>
+  </div></div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Quantidade</th>
-            <th>Validade</th>
-            <th>Ação</th>
-          </tr>
-        </thead>
-        <tbody id="corpoEstoque">
-         
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div
-    id="modalSaida"
-    class="modal-saida"
->
-
-    <div class="modal-conteudo">
-
-        <h2>Registrar saída</h2>
-
-        <p>
-            Produto:
-            <strong id="modalProduto"></strong>
-        </p>
-
-        <p>
-            Estoque disponível:
-            <strong id="modalEstoque"></strong>
-        </p>
-
-
-        <label>
-            Quantidade
-        </label>
-
-        <div class="controle-quantidade">
-
-            <button
-                type="button"
-                onclick="diminuirSaida()"
-            >
-                -
-            </button>
-
-            <input
-                id="quantidadeSaida"
-                type="number"
-                value="1"
-                min="1"
-                readonly
-            >
-
-            <button
-                type="button"
-                onclick="aumentarSaida()"
-            >
-                +
-            </button>
-
-        </div>
-
-
-        <label for="compradorSaida">
-            Comprador
-        </label>
-
-        <input
-            id="compradorSaida"
-            type="text"
-            placeholder="Nome do comprador"
-        >
-
-
-        <div class="resumo-venda">
-
-            <h3>Descrição da saída</h3>
-
-            <p>
-                Produto:
-                <span id="resumoProduto"></span>
-            </p>
-
-            <p>
-                Quantidade:
-                <span id="resumoQuantidade">1</span>
-            </p>
-
-        </div>
-
-
-        <div class="botoes-modal">
-
-            <button
-                type="button"
-                onclick="fecharModalSaida()"
-            >
-                Cancelar
-            </button>
-
-            <button
-                type="button"
-                onclick="confirmarSaida()"
-            >
-                Confirmar saída
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-<div id="modalEditar" class="modal-saida">
-
-    <div class="modal-conteudo">
-
-        <h2>Editar Produto</h2>
-
-        <input type="hidden" id="editarId">
-
-        <label>Nome</label>
-        <input id="editarNome" type="text">
-
-        <label>Quantidade</label>
-        <input id="editarQuantidade" type="number" min="1">
-
-        <label>Validade</label>
-        <input id="editarValidade" type="date">
-
-        <div class="botoes-modal">
-           <button type="button" onclick="fecharModalEditar()">Cancelar</button>
-            <button type="button" onclick="salvarEdicao()">Salvar Alterações</button>
-        </div>
-
-    </div>
-
-</div>
+  <div id="modalEditar" class="modal-saida"><div class="modal-conteudo">
+    <h2>Editar Produto</h2><input type="hidden" id="editarId"><label>Nome</label><input id="editarNome" type="text"><label>Quantidade</label><input id="editarQuantidade" type="number" min="0"><label>Validade</label><input id="editarValidade" type="date"><div class="botoes-modal"><button type="button" onclick="fecharModalEditar()">Cancelar</button><button type="button" onclick="salvarEdicao()">Salvar Alterações</button></div>
+  </div></div>
 </body>
 </html>
