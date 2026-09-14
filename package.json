@@ -4,27 +4,36 @@
   "description": "Sistema de gestão de estoque",
   "main": "main.js",
   "author": "Kahuã Vinicius",
+
   "scripts": {
     "electron": "electron .",
     "build": "electron-builder --win"
   },
+
   "devDependencies": {
     "electron": "30.0.9",
     "electron-builder": "^24.13.3"
   },
+
   "build": {
-    "appId": "com.sistema.estoque",
-    "productName": "Sistema de Estoque",
+    "appId": "com.kviis.kvsflow",
+    "productName": "KVS FLOW",
+
     "files": [
       "main.js",
-      "package.json"
+      "package.json",
+      "build/**/*"
     ],
+
     "directories": {
       "output": "dist"
     },
+
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "build/icon.ico"
     },
+
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
